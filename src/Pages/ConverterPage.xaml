@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BetterConverters.Pages.ConverterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:BetterConverters.Converters"
+    xmlns:models="clr-namespace:BetterConverters.Models"
+    xmlns:viewmodels="clr-namespace:BetterConverters.ViewModels"
+    Title="Better Converters"
+    x:DataType="viewmodels:ConverterViewModel">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:MediaTypeImageConverter x:Key="MediaTypeImageConverter" />
+            <converters:MediaTypeColorConverter x:Key="MediaTypeColorConverter" />
+            <converters:ContentColorConverter x:Key="ContentColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout
+        Padding="20"
+        BackgroundColor="{Binding MediaType, Converter={StaticResource MediaTypeColorConverter}}"
+        HorizontalOptions="Center"
+        Spacing="20"
+        VerticalOptions="Center">
+        <Label Text="{Binding MediaType, StringFormat='Media Type: {0}'}" />
+
+        <Picker ItemsSource="{Binding SupportedMediaTypes}" SelectedItem="{Binding MediaType}" />
+
+        <Image HeightRequest="250" Source="{Binding MediaType, Converter={StaticResource MediaTypeImageConverter}}" />
+
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Content}" Spacing="10">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="models:Content">
+                    <Grid
+                        ColumnDefinitions="50, *"
+                        ColumnSpacing="20"
+                        HeightRequest="50">
+                        <Border
+                            Grid.Column="0"
+                            BackgroundColor="{Binding ., Converter={StaticResource ContentColorConverter}}"
+                            Stroke="Black"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="5" />
+                        <Label
+                            Grid.Column="1"
+                            Text="{Binding Name}"
+                            VerticalTextAlignment="Center" />
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>
